@@ -1,7 +1,7 @@
 <?php $profile_page = 'profile.php'; ?>
 <?php include 'includes/header.php';?>
 <?php 
-  if(!isset($_SESSION['user']) || $_SESSION['user']['user_role']!== 'admin' ){
+  if(!isset($_SESSION['user']) || $_SESSION['user']['user_role'] == 'subscriber' ){
     header("Location:../index.php");
   }
 ?>

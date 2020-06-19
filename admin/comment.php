@@ -35,7 +35,13 @@
                              
                             </thead>
                             <tbody>
-                              <?php $comment_obj->getCommentsInAdminTable(); ?>
+                            <?php if($_SESSION['user']['user_role'] === 'author'){ 
+                              $comment_obj->getAuthorPostComments();
+                              
+                            }else{
+                              $comment_obj->getCommentsInAdminTable();
+                            }
+                            ?>
                             </tbody>
                           </table>
                         </div>

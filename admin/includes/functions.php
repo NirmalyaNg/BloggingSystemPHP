@@ -1,5 +1,4 @@
 <?php  include "db.php"; 
-session_start();
 ?>
 <?php
 //Utility function
@@ -195,6 +194,78 @@ function show_posts(){
     <?php 
   }
 }
+
+
+function show_posts_by_author(){
+  global $connection;
+  $author_name = $_SESSION['user']['user_name'];
+  $query = "SELECT * FROM posts WHERE post_author = '$author_name'";
+  $result = mysqli_query($connection,$query);
+  if(mysqli_num_rows($result)){
+  while($row = mysqli_fetch_assoc($result)){
+    $post_id = mysqli_real_escape_string($connection,$row['post_id']);
+    $post_title = mysqli_real_escape_string($connection,$row['post_title']);
+    $post_author = mysqli_real_escape_string($connection,$row['post_author']);
+    $post_category = mysqli_real_escape_string($connection,$row['post_category']);
+    $post_content = mysqli_real_escape_string($connection,$row['post_content']);
+    $post_tags = mysqli_real_escape_string($connection,$row['post_tags']);
+    $post_status = mysqli_real_escape_string($connection,$row['post_status']);
+    $post_date = mysqli_real_escape_string($connection,$row['post_date']);
+    $post_comment_count = mysqli_real_escape_string($connection,$row['post_comment_count']);
+    $post_views = mysqli_real_escape_string($connection,$row['post_views']);
+    $post_image = mysqli_real_escape_string($connection,$row['post_image']);
+
+
+    //Show only an exerpt of the content
+    $post_content = substr($post_content,0,20).'..';
+    ?>
+    <tr id="title_row">
+      <td><input type="checkbox" class="checkboxes" name="checkBoxArray[]" value="<?php echo $post_id; ?>"></td>
+      <td><?php echo $post_id; ?></td>
+      <td id="title"><a href="../single_post.php?post_id=<?php echo $post_id ?>"><?php echo $post_title; ?></a></td>
+      <td><?php echo $post_category; ?></td>
+      <td><?php echo $post_author; ?></td>
+      <td><?php echo $post_date; ?></td>
+      <td><img src="images/<?php echo $post_image; ?>" alt="" class="img-responsive" style="width:150px;"></td>
+      <td><?php echo $post_comment_count; ?></td>
+      <td><?php echo $post_views; ?></td>
+      <td><?php echo $post_tags; ?></td>
+      <td><?php echo $post_status; ?></td>
+      <td><a href="includes/admin_posts_actions.php?action=approve&id=<?php echo $post_id; ?>">Approve</a></td>
+      <td><a href="includes/admin_posts_actions.php?action=unapprove&id=<?php echo $post_id; ?>">Unapprove</a></td>
+      <td><a href="posts.php?source=edit_post&id=<?php echo $post_id; ?>">Edit</a></td>
+      <td><a href="includes/admin_posts_actions.php?action=delete&id=<?php echo $post_id; ?>" onclick='return confirm("Are you sure you want to delete the post ?")'>Delete</a></td>
+    </tr>
+    <?php 
+  }
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //--------------------------------Comments---------------------------------------------
 
@@ -446,50 +517,56 @@ function delete_user($id){
 function add_user(){
   global $connection;
   if(isset($_POST['add_user'])){
-    $user_id = $_POST['user_id'];
     $user_name = $_POST['user_name'];
     $user_email = $_POST['user_email'];
     $user_pic = $_POST['user_image'];
     $user_role = $_POST['user_role'];
     $user_password = $_POST['user_password'];
 
-    //File Upload Section
-    $target_dir = "user_images/";
-    $target_file = $_SERVER['DOCUMENT_ROOT'].'/blogging_system/admin/'.$target_dir . basename($_FILES["user_image"]["name"]);
-    $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-    // Check file size
-    if ($_FILES["user_image"]["size"] > 500000) {
-      echo "Sorry, your file is too large.";
-      $uploadOk = 0;
-    }
-    // Allow certain file formats
-    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
-      echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-      $uploadOk = 0;
-    }
+    //Check if there is profile picture of the user
+    if(isset($_POST['user_image'])){
+        //File Upload Section
+        $target_dir = "user_images/";
+        $target_file = $_SERVER['DOCUMENT_ROOT'].'/blogging_system/admin/'.$target_dir . basename($_FILES["user_image"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        // Check file size
+        if ($_FILES["user_image"]["size"] > 500000) {
+          echo "Sorry, your file is too large.";
+          $uploadOk = 0;
+        }
+        // Allow certain file formats
+        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
+          echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+          $uploadOk = 0;
+        }
 
-    if ($uploadOk == 0) {
-      echo "Sorry, your file was not uploaded.";
-    // if everything is ok, try to upload file
-    } else {
-      if (!move_uploaded_file($_FILES["user_image"]["tmp_name"], $target_file)) {
-        echo "Sorry, there was an error uploading your file.";
+        if ($uploadOk == 0) {
+          echo "Sorry, your file was not uploaded.";
+        // if everything is ok, try to upload file
+        } else {
+          if (!move_uploaded_file($_FILES["user_image"]["tmp_name"], $target_file)) {
+            echo "Sorry, there was an error uploading your file.";
+          }
+
+        $user_image_name = $_FILES['user_image']['name'];
+        //Inserting into database
+        $query = "INSERT INTO users (user_name,user_email,user_password,user_role,user_pic) VALUES ('$user_name','$user_email','$user_password','$user_role','$user_image_name')";
       }
+    }else{
+      //If there is no profile picture of the user then set profile picture to default profile picture
 
-    $user_image_name = $_FILES['user_image']['name'];
-    //Inserting into database
-    $query = "INSERT INTO users (user_name,user_email,user_password,user_role,user_pic) VALUES ('$user_name','$user_email','$user_password','$user_role','$user_image_name')";
-
-   
+      $user_image = 'default.jpg';
+      //Inserting into database
+      $query = "INSERT INTO users (user_name,user_email,user_password,user_role,user_pic) VALUES ('$user_name','$user_email','$user_password','$user_role','$user_image')";
+    }
     $exec = mysqli_query($connection,$query);
     if(!$query){
       die("Query Failed ".mysqli_error($connection));
     }else{
       header("Location:../users.php?source=view_all_users");
     }
-
-  }
+    
 }
 }
 

@@ -42,13 +42,16 @@
 
                         </ul>
                     </li>
-                       <li <?php if(isset($categories_page) && $categories_page == 'categories.php') {echo 'class='.'active' ;} ?>>
+                    <?php if($_SESSION['user']['user_role'] === 'admin') {  ?>
+                    <li <?php if(isset($categories_page) && $categories_page == 'categories.php') {echo 'class='.'active' ;} ?>>
                         <a href="categories.php"><i class="fa fa-fw fa-suitcase"></i> Categories</a>
                     </li>
+                    <?php } ?>
                     <li <?php if(isset($comments_page) && $comments_page == 'comments.php') {echo 'class='.'active' ;} ?>>
                         <a href="comment.php"><i class="fa fa-fw fa-comment"></i> Comments </a>
                     </li>
-                       <li <?php if(isset($users_page) && $users_page == 'users.php') {echo 'class='.'active' ;} ?>>
+                    <?php if($_SESSION['user']['user_role'] === 'admin') { ?>
+                    <li <?php if(isset($users_page) && $users_page == 'users.php') {echo 'class='.'active' ;} ?>>
                         <a href="javascript:;" data-toggle="collapse" data-target="#users"><i class="fa fa-fw fa-users"></i> Users <i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="users" class="collapse">
                             <li>
@@ -61,6 +64,7 @@
 
                         </ul>
                     </li>
+                    <?php } ?>
                     <li <?php if(isset($profile_page) && $profile_page == 'profile.php') {echo 'class='.'active' ;} ?>>
                         <a href="profile.php"><i class="fa fa-fw fa-user"></i> Profile</a>
                     </li>

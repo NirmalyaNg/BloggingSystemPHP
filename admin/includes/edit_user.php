@@ -37,9 +37,15 @@ $user_password = $row['user_password'];
           if($user_role == 'admin'){
             echo "<option value='admin' selected>Admin</option>";
             echo "<option value='subscriber'>Subscriber</option>";
+            echo "<option value='author'>Author</option>";
+          }else if($user_role == 'author'){
+            echo "<option value='author' selected>Author</option>";
+            echo "<option value='admin'>Admin</option>";
+            echo "<option value='subscriber'>Subscriber</option>";
           }else{
             echo "<option value='subscriber' selected>Subscriber</option>";
             echo "<option value='admin'>Admin</option>";
+            echo "<option value='author'>Author</option>";
           }
           
         

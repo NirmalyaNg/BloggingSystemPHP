@@ -32,7 +32,11 @@
               include("includes/edit_post.php");
             break;
             default:
-            include("includes/view_all_posts.php");
+            if($_SESSION['user']['user_role'] === 'author'){
+              include("includes/view_author_posts.php");
+            }else{
+              include("includes/view_all_posts.php");
+            }
           }
         }
         ?>

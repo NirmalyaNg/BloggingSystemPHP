@@ -24,26 +24,34 @@ if(!$result){
 <?php }else{
   ?>
   <div class="sidebar-box">
-    <h3 class="heading">Logged In As <?php echo $_SESSION['user']['user_name']; ?></h3>
-    <a href="logout.php" class="btn btn-primary btn-sm">Logout</a>
+    <div class="bio text-center">
+      <?php $img = $_SESSION['user']['user_pic']; ?>
+      <img src="admin/user_images/<?php echo $img; ?>" alt="Image Placeholder" style="border-radius:0px;">
+      <div class="bio-body">
+        <h2 class="heading"><?php echo $_SESSION['user']['user_name']; ?></h2>
+      </div>
+      <a href="logout.php" class="btn btn-primary btn-sm">Logout</a>
     <?php 
+    $currentFile = $_SERVER["PHP_SELF"]; //To get the entire url starting after localhost
+    $parts = Explode('/', $currentFile);
+    $current_page_name = $parts[count($parts) - 1];
+
+
     if($_SESSION['user']['user_role'] === 'admin'){
       echo "<a href='admin/index.php' class='btn btn-outline-primary btn-sm'>Admin Section</a>";
-
-      $currentFile = $_SERVER["PHP_SELF"]; //To get the entire url starting after localhost
-      $parts = Explode('/', $currentFile);
-      $current_page_name = $parts[count($parts) - 1];
-
       //The edit post button should be displayed only on the single_post.php page
       if($current_page_name === 'single_post.php'){
         echo "<a href='admin/posts.php?source=edit_post&id={$post_id}' class='btn btn-primary btn-sm mt-2'>Edit Post</a>";
       }
+    }else if($_SESSION['user']['user_role'] === 'author'){
+      echo "<a href='admin/index.php' class='btn btn-outline-primary btn-sm'>Author Section</a>";
+      if($current_page_name === 'single_post.php' && $post_author == $_SESSION['user']['user_name']){
+        echo "<a href='admin/posts.php?source=edit_post&id={$post_id}' class='btn btn-primary btn-sm mt-2'>Edit Post</a>";
+      }
     }
     ?>
-
+    </div>
   </div>
-
-
 <?php } ?>
 
 
