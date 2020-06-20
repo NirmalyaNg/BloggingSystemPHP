@@ -12,14 +12,16 @@ if(!$result){
 <div class="sidebar-box">
   <h3 class="heading">Login Here</h3>
     <form action="login.php" method="Post">
-    <div class="form-group">
-      <input type="email" name="email" placeholder="Enter Email" class="form-control">
-    </div>
-    <div class="form-group">
-      <input type="password" name="pass" placeholder="Enter Password" class="form-control">
-    </div>
-    <input type="submit" name="login" value="Login" class="btn btn-primary">
+      <div class="form-group">
+        <input type="email" name="email" placeholder="Enter Email" class="form-control">
+      </div>
+      <div class="form-group">
+        <input type="password" name="pass" placeholder="Enter Password" class="form-control">
+      </div>
+      <input type="submit" name="login" value="Login" class="btn btn-primary">
     </form>
+    <!--Signup button-->
+    <a href="#" class="btn btn-primary">SIGNUP</a>
 </div>
 <?php }else{
   ?>
